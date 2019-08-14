@@ -24,7 +24,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.redcrix.a20.KycFrontend"
+    },
+    "android": {
+      "package": "com.redcrix.a20.KycFrontend"
     }
   }
 }

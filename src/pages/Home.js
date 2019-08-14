@@ -1,62 +1,93 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View,Image, TextInput, TouchableOpacity, AsyncStorage, Keyboard } from 'react-native';
-
+import { Image,StyleSheet} from 'react-native';
+import FormAuth from '../components/FormAuth';
+import SocialIcons from '../components/SocialIcons';
 import {Actions} from 'react-native-router-flux';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { SocialIcon } from 'react-native-elements';
+import { Container,Content, Title,Thumbnail, Text, Button, Left, Right, Body, Icon,Grid,Row } from 'native-base';
+import CountDown from 'react-native-countdown-component';
+import moment from 'moment';
+
 
 export default class Home extends Component {
 
+
+  constructor(props){
+    super(props);
+    this.state = {
+      totalDuration: 0,
+    };
+
+  }
+  login() {
+    Actions.login()
+}
+componentDidMount() {
+  var that = this;
+
+
+  var date = moment()
+    .utcOffset('+05:30')
+    .format('YYYY-MM-DD hh:mm:ss');
+  //Getting the current date-time with required formate and UTC   
+  
+  var expirydate = '2019-10-23 04:00:45';//You can set your own date-time
+  //Let suppose we have to show the countdown for above date-time 
+
+  var diffr = moment.duration(moment(expirydate).diff(moment(date)));
+  //difference of the expiry date-time given and current date-time
+
+  var hours = parseInt(diffr.asHours());
+  var minutes = parseInt(diffr.minutes());
+  var seconds = parseInt(diffr.seconds());
+  
+  var d = parseInt(hours * 60 * 60 + minutes * 60 + seconds);
+  //converting in seconds
+
+  that.setState({ totalDuration: parseInt(d) });
+  //Settign up the duration of countdown in seconds to re-render
+}
+
+
     render() {
         return(
-                <View style={styles.container}>
-                <Text>{'\n'}</Text>
-                <Text>{'\n'}</Text>
-                <Image source={require('../images/logo.png')} style={{width: 150, height: 150}}/>
-                <View style={styles.socialcontainer}>
-        <Icon.Button  name="facebook" backgroundColor="#3b5998" onPress={this.loginWithFacebook}
-  >Login with Facebook
-  </Icon.Button>
-  <Icon.Button style={styles.socialicon} name="google" backgroundColor="#3b5998" onPress={this.loginWithFacebook}
-  >Login with Google
-  </Icon.Button>
-  </View>
-                <View style={styles.signupTextCont}> 
-                    <Text style={styles.signupText}>Dont have an account yet? </Text>
-                    <TouchableOpacity onPress={this.signup}><Text style={styles.signupButton}>Signup</Text></TouchableOpacity>
-                </View>
-            </View>
+          <Container>
+                  <Content  padder >
+                  <Grid style={{justifyContent: 'center',alignItems: 'center',marginTop:10}}> 
+                  <Row>
+                  <Image source={require('../images/logo.png')} style={{width: 150, height: 150}}/>
+                  </Row>
+                  </Grid>
+                  <Text>{"\n"}</Text>
+                  <Text>{"\n"}</Text>
+                  <Text>{"\n"}</Text>
+                    <Grid style={{justifyContent: 'center',alignItems: 'center'}}> 
+            <Row><CountDown
+          until={this.state.totalDuration}
+          //duration of countdown in seconds
+          timetoShow={('M', 'S')}
+          //formate to show
+          onFinish={() => alert('Expired')}
+          size={25}
+        /></Row> 
+        <Text>{"\n"}</Text>     
+            <Row><Button success onPress={this.login}><Text>Continue</Text><Icon name='ios-arrow-forward' /></Button></Row>    
+            </Grid>
+                </Content>
+                
+          </Container>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: 'white',
-    },
-    signupTextCont: {
-      flexGrow: 1,
-      justifyContent: 'center',
-      alignItems: 'flex-end',
-      paddingVertical: 16,
-      flexDirection: 'row',
-    },
-    signupText: {
-      color: '#12799f', 
-      fontSize:16,
-    },
-    signupButton: {
-        color: '#12799f',
-        fontSize:16,
-        fontWeight: '500',
-    },
-    socialcontainer:{
-      paddingVertical: 50,
-    },
-    socialicon:{
-      marginVertical: 20,
-      
+
+    timercontent:{
+      backgroundColor:'blue',
+      padding:5,
+      marginRight:6,
+      marginBottom:10,
+      fontSize:18,
+      color:'#fff'
     }
 });
