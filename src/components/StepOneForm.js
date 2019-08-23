@@ -1,49 +1,59 @@
 import React, { Component } from 'react';
 import {  StyleSheet,TouchableOpacity, AsyncStorage} from 'react-native';
- 
-import {Actions} from 'react-native-router-flux';
 import { Container,DatePicker, Content,Button,  Item, Input,Label,Text,Icon,Row,Col,Grid,Left,Right } from 'native-base';
 import Geocoder from 'react-native-geocoding';
+import { Field,reduxForm } from 'redux-form';
+import ValidationComponent from '../validators/index';
+var s = require('../../assets/css/style');
 
-export default class StepOneForm extends Component {
+export default class StepOneForm extends ValidationComponent {
+  
       continue= e =>{
         e.preventDefault();
+        const {dob,address} = this.state;
+      
         this.props.nextStep();
+        
       } 
-
-      
-    render() {
-      const {values,handleChange,handleChangeDate,locationData} = this.props;
-      console.log(locationData);
-      
+     getMapAddress(){
+      const {locationData} = this.props;
+      const locationVars=fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng='+locationData['longitude']+','+locationData['latitude']+'&key=AIzaSyDxk83npmns1fxpNp-tsNE-J-km3mY-gTs');
+    }
+     render() {
+      const {values,handleChange,handleChangeDate,userDetails} = this.props;
+  
             return(
                 <Content padder>
-                  <Item floatingLabel padder> 
+                  <Item stackedLabel padder> 
+  
             <Label>First Name</Label>
-                      <Input 
+                      <Input disabled
                     underlineColorAndroid='rgba(0,0,0,0)' 
                     ref={(input) => this.firstname = input}
                     onChange={this.props.handleChange('firstname')}
-                    defaultValue={values.firstname}
+                    defaultValue={userDetails.firstname}
                     />
                     </Item>
-                    <Item floatingLabel padder> 
+                    {this.isFieldInError('firstname') && this.getErrorsInField('firstname').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
+                   
+                    <Item stackedLabel padder> 
             <Label>Middle Name</Label>
-                    <Input 
+                    <Input disabled
                     underlineColorAndroid='rgba(0,0,0,0)' 
                     ref={(input) => this.middlename = input}
                     onChange={this.props.handleChange('middlename')}
-                    defaultValue={values.lastname}
+                    defaultValue={userDetails.middlename}
+          
                     />
                     </Item>
-                    <Item floatingLabel padder> 
+                    <Item stackedLabel padder> 
             <Label>Last Name</Label>
-                    <Input 
+                    <Input disabled
                     underlineColorAndroid='rgba(0,0,0,0)' 
                     ref={(input) => this.lastname = input}
                     onChange={this.props.handleChange('lastname')}
-                    defaultValue={values.lastname}
-
+                    defaultValue={userDetails.lastname}
+           
                     />
                     </Item>
                     <Item > 
@@ -71,6 +81,7 @@ export default class StepOneForm extends Component {
                     
                     />
                        </Item>
+                       {this.isFieldInError('dob') && this.getErrorsInField('dob').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
                     <Item floatingLabel padder> 
                     <Label>Address</Label>
                 
@@ -79,8 +90,10 @@ export default class StepOneForm extends Component {
                     underlineColorAndroid='rgba(0,0,0,0)' 
                     ref={(input) => this.address = input}
                     onChange={this.props.handleChange('address')}
+                    defaultValue={this.getMapAddress()}
                     />
                        </Item>
+                       {this.isFieldInError('address') && this.getErrorsInField('address').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
                     <Item floatingLabel padder> 
                     <Label>Nationality</Label>
                     <Input 
@@ -98,7 +111,7 @@ export default class StepOneForm extends Component {
           </Button>
           </Left>
 <Right>
-          <Button iconRight  onPress={this.continue}>
+          <Button iconRight style={s.buttonStyle} onPress={this.continue}>
           <Text>Next</Text>
            <Icon name='arrow-forward'  />
             
@@ -111,9 +124,18 @@ export default class StepOneForm extends Component {
             
     }
 }
+
 const styles = StyleSheet.create({
-  itemstyle:{
-    marginBottom:5
-  }
+
+  errorText:{
+    color:'red',
+    marginTop:5,
+    marginBottom:5,
+  },
+  apiText:{
+    color:'green',
+    marginTop:5,
+    marginBottom:5,
+  },
+
 });
- 

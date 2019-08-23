@@ -4,6 +4,7 @@ import {  TouchableOpacity, AsyncStorage ,TouchableWithoutFeedback} from 'react-
 import {Actions} from 'react-native-router-flux';
 import { Container,DatePicker, Content,Button,ListItem,Radio,  Item, Label,Text,Icon,Row,Col,Grid,Left,Right } from 'native-base';
 import { RadioButtons } from 'react-native-radio-buttons';
+var s = require('../../assets/css/style');
 export default class StepOneForm extends Component {
     constructor(props) {
         super(props);
@@ -54,7 +55,7 @@ export default class StepOneForm extends Component {
                 />
                 <Grid style={{marginTop:8}}>
         <Left>
-        <Button iconLeft  onPress={this.back}>
+        <Button iconLeft style={s.buttonStyle} onPress={this.back}>
             <Icon name='arrow-back' />
             <Text>Back</Text>
           </Button>
@@ -62,7 +63,7 @@ export default class StepOneForm extends Component {
           </Grid>
           <Grid style={{marginTop:8}}>
         <Left>
-        <Button onPress={this.submit}>
+        <Button style={s.buttonStyle} onPress={this.submit}>
             <Text>Submit</Text>
           </Button>
           </Left>

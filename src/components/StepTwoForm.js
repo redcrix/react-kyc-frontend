@@ -7,16 +7,17 @@ import {  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View} from 'react-native';
-import { Icon, Item,Button, Picker,Left,Right, Content,Grid, Container ,Text,Row,Col, Label } from 'native-base';
+import { Icon, Item,Button, Picker,Left,Right, Content, Container ,Text,Row,Col,Grid, Label } from 'native-base';
  
 import {Actions} from 'react-native-router-flux';
 //import * as ImagePicker from 'expo-image-picker';
 
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import Camera from 'react-native-camera';
-import {faceDetector} from 'expo-face-detector';
+import { Camera } from 'expo-camera';
+import * as FaceDetector from 'expo-face-detector';
 import { Dropdown } from 'react-native-material-dropdown';
+var s = require('../../assets/css/style');
 
 
  
@@ -28,6 +29,27 @@ export default class StepTwoForm extends Component {
       mirrorMode: false
     };
   }
+  async componentWillMount() {
+    const { status } =await Permissions.askAsync(Permissions.CAMERA);
+    this.setState({hasCameraPermission:status==='granted'});
+}
+snap = async (recognize) => {
+  try {
+      if (this.camera) {
+          let photo = await this.camera.takePictureAsync({ base64: true });
+          if(!faceDetected) {
+              alert('No face detected!');
+              return;
+          }
+
+          const userId = makeId();
+          const { base64 } = photo;
+          this[recognize ? 'recognize' : 'enroll']({ userId, base64 });
+      }
+  } catch (e) {
+      console.log('error on snap: ', e)
+  }
+};
   continue= e =>{
     e.preventDefault();
     this.props.nextStep();
@@ -72,21 +94,21 @@ export default class StepTwoForm extends Component {
       
         <StatusBar barStyle="default" />
      
-        <Grid style={{marginBottom:8}}>
+        <Grid style={styles.maybeRenderContainer}>
         {this._maybeRenderImage()}
         {this._maybeRenderUploadingOverlay()}
           <Row>
-        <Button block
+        <Button block style={s.buttonStyle}
           onPress={this._takePhotoAddress}
           
         ><Text>Choose Photo</Text></Button>
 </Row>
         </Grid>
-        <Grid  style={{marginBottom:8}}>
+        <Grid style={styles.maybeRenderContainer}>
         {this._maybeRenderImagePhoto()}
         {this._maybeRenderUploadingOverlayPhoto()}
         <Row>
-        <Button block
+        <Button style={s.buttonStyle} block
           onPress={this._takePhoto}
           
         ><Text>Take a photo</Text></Button>
@@ -94,13 +116,13 @@ export default class StepTwoForm extends Component {
         </Grid>
         <Grid>
         <Left>
-        <Button iconLeft  onPress={this.back}>
+        <Button iconLeft style={s.buttonStyle} onPress={this.back}>
             <Icon name='arrow-back' />
             <Text>Back</Text>
           </Button>
           </Left>
 <Right>
-          <Button iconRight  onPress={this.continue}>
+          <Button iconRight style={s.buttonStyle} onPress={this.continue}>
           <Text>Next</Text>
            <Icon name='arrow-forward'  />
             
@@ -142,36 +164,36 @@ export default class StepTwoForm extends Component {
     if (!aid) {
       return (
         <Content>
-        <View
+        <Grid
           style={styles.maybeRenderContainer}>
-          <View
+          <Row
             style={styles.maybeRenderImageContainer}>
             <Image source={require('../images/idproof.png')} style={styles.maybeRenderImage} />
-          </View>
+          </Row>
           <Text
             onPress={this._copyToClipboard}
             onLongPress={this._share}
             style={styles.maybeRenderImageText}>
           </Text>
-        </View>
+        </Grid>
         </Content>
       );
     }
     else{
     return (
       <Content padder>
-      <View
+      <Grid
         style={styles.maybeRenderContainer}>
-        <View
+        <Row
           style={styles.maybeRenderImageContainer}>
           <Image source={{ uri: aid }} style={styles.maybeRenderImage} />
-        </View>
+        </Row>
         <Text
           onPress={this._copyToClipboard}
           onLongPress={this._share}
           style={styles.maybeRenderImageText}>
         </Text>
-      </View>
+      </Grid>
       </Content>
     );
     }
@@ -184,37 +206,37 @@ export default class StepTwoForm extends Component {
     if (!sid) {
       return (
         <Content>
-        <View
+        <Grid
           style={styles.maybeRenderContainer}>
-          <View
+          <Row
             style={styles.maybeRenderImageContainer}>
             <Image source={require('../images/idproof.png')} style={styles.maybeRenderImage} />
-          </View>
+          </Row>
           <Text
             onPress={this._copyToClipboard}
             onLongPress={this._share}
             style={styles.maybeRenderImageText}>
           </Text>
-        </View>
+        </Grid>
         </Content>
       );
     }
 else{
     return (
       <Content padder>
-      <View
+      <Grid
         style={styles.maybeRenderContainer}>
-        <View
+        <Row
           style={styles.maybeRenderImageContainer}>
             
           <Image source={{ uri: sid }} style={styles.maybeRenderImage} />
-        </View>
+        </Row>
         <Text
           onPress={this._copyToClipboard}
           onLongPress={this._share}
           style={styles.maybeRenderImageText}>
         </Text>
-      </View>
+      </Grid>
       </Content>
     );
 }
@@ -347,16 +369,6 @@ _handleImagePickedPhoto = async pickerResult => {
 
 async function uploadImageAsync(uri) {
   let apiUrl = 'http://redcrix.pythonanywhere.com/';
-
-  // Note:
-  // Uncomment this if you want to experiment with local server
-  //
-  // if (Constants.isDevice) {
-  //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
-  // } else {
-  //   apiUrl = `http://localhost:3000/upload`
-  // }
-
   let uriParts = uri.split('.');
   console.log(uri);
   let fileType = uriParts[uriParts.length - 1];
@@ -379,17 +391,7 @@ async function uploadImageAsync(uri) {
   return fetch(apiUrl, options,uri);
 }
 async function uploadImagePhotoAsync(uri) {
-  let apiUrl = 'http://19b38645.ngrok.io';
-
-  // Note:
-  // Uncomment this if you want to experiment with local server
-  //
-  // if (Constants.isDevice) {
-  //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
-  // } else {
-  //   apiUrl = `http://localhost:3000/upload`
-  // }
-
+  let apiUrl = 'http://redcrix-sm.herokuapp.com';
   let uriParts = uri.split('.');
   let fileType = uriParts[uriParts.length - 1];
   let formData = new FormData();
@@ -412,7 +414,9 @@ async function uploadImagePhotoAsync(uri) {
 }
  
 const styles = StyleSheet.create({
-
+  maybeRenderContainer:{
+   justifyContent: 'center',alignItems: 'center',marginTop:10
+  },
     maybeRenderImage: {
       height: 250,
       width: 320,

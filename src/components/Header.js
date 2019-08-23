@@ -5,13 +5,11 @@ import {Actions} from 'react-native-router-flux';
 
 
 export default class HeaderContainer extends Component {
-
-
     render() {
         return(   
         <Header style={{backgroundColor:"#154771"}}>
           <Left>
-          <Image source={require('../images/logo.png')} style={{width: 20, height: 20}}/>
+          <Image source={require('../images/logo.png')} style={{width: 150, height: 100}}/>
           </Left>
           <Right />
         </Header>
@@ -19,30 +17,3 @@ export default class HeaderContainer extends Component {
     }
 }
 
-// const styles = StyleSheet.create({
-//   headercontainer: {
-//       flex: 1,
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//       backgroundColor: 'white',
-//     },
-//     signupTextCont: {
-//       flexGrow: 1,
-//       justifyContent: 'center',
-//       alignItems: 'flex-end',
-//       paddingVertical: 16,
-//       flexDirection: 'row',
-//     },
-//     signupText: {
-//       color: '#12799f', 
-//       fontSize:16,
-//     },
-//     signupButton: {
-//         color: '#12799f',
-//         fontSize:16,
-//         fontWeight: '500',
-//     },
-//     socialcontainer:{
-//       paddingVertical: 50
-//     }
-// });

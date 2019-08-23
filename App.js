@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
+
 import {
-  StyleSheet,
-  View,
-  StatusBar
+  AppRegistry,
+  Platform
 } from 'react-native';
 
 import { AppLoading } from 'expo';
-import { Container, Text } from 'native-base';
+import { Root } from 'native-base';
 import Routes from './src/Routes';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import {Actions} from 'react-native-router-flux';
+import {name as appName} from './app.json';
 
+if (Platform.OS === 'web') {
+      AppRegistry.runApplication(appName, {
+           rootTag: document.getElementById('root'),
+       });
+  }
 export default class App extends Component   {
   constructor(props) {
     super(props);
@@ -35,9 +40,9 @@ export default class App extends Component   {
        return <AppLoading />;
      }
     return (
-      <Container>
+      <Root>
        <Routes/>
-      </Container>
+      </Root>
     );
   }
 }

@@ -1,16 +1,101 @@
 import React, { Component } from 'react';
-import {  TouchableOpacity } from 'react-native';
-import { Container,Content, Title, Text, Button, Left, Right, Body, Icon } from 'native-base';
+import {  TouchableOpacity,StyleSheet } from 'react-native';
+import { Container,Content, Title, Text, Button, Left, Right, Body, Icon,Item,Input,Label,Toast } from 'native-base';
 import {Actions} from 'react-native-router-flux';
 import SocialIcons from '../components/SocialIcons';
 import FormAuth from '../components/FormAuth';
 import { SocialIcon } from 'react-native-elements';
+var s = require('../../assets/css/style');
+import ValidationComponent from '../validators/index';
 
-export default class Login extends Component {
-
-    signup() {
-        Actions.signup()
+export default class Login extends ValidationComponent {
+  constructor(props){
+    super(props);
+   
+    this.state={
+      showToast: false,
+       userDetails:{},
+        email:'',
+        password: '',
+        modalVisible: false,
     }
+
+}
+
+
+    signup= () => {
+      this.props.navigation.navigate('Signup');
+    }
+
+    storeData = async (userData) => {
+      try 
+      {
+        await AsyncStorage.setItem('userData',  JSON.stringify(userData));
+      } catch (error) {
+        return error;
+      }
+    };
+    getData = async () => {
+      try {
+          const {token} = this.state;
+        var tokenAuth=await AsyncStorage.getItem('token');
+this.setState({token:tokenAuth});
+      } catch (error) {
+        
+      }
+    };
+
+  saveData =(navigate)=>{
+      const {email,password,firstname,middlename,lastname} = this.state;
+      console.log(email);
+
+      //save data with asyncstorage
+      let loginDetails={
+          email: email,
+          password: password
+      }
+        const validate=this.validate({
+          email: {email: true},
+          password: {required: true},
+        });
+        if(validate==true){
+              //let loginDetails = await AsyncStorage.getItem('loginDetails');
+              let ld = JSON.stringify(loginDetails);
+
+              fetch('https://ubuntu-backend.herokuapp.com/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: ld
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if(responseJson.success==false){  
+        Toast.show({
+          text: responseJson.message,
+          buttonText: "Okay",
+          type: "danger",
+        })
+      }
+        else
+        {
+          Toast.show({
+            text: responseJson.message,
+            buttonText: "Okay",
+            type: "success",
+          })
+        this.storeData(responseJson.data);      
+        navigate('Dashboard');
+        }
+      })
+    .catch((error) => {
+      alert(error);
+    })
+    .done()
+  }}
+
     
     loginWithFacebook=async()=>{ 
       try {
@@ -35,16 +120,38 @@ export default class Login extends Component {
     }
     
         render() {
+          const { navigate } = this.props.navigation;
             return(
               <Container>
             <Content padder>
-                    <FormAuth type="Login"/>
+            <Item floatingLabel padder> 
+            <Label>Email Address</Label>
+                <Input 
+                isRequired={true}
+                onChangeText={(email) => this.setState({email})}
+                underlineColorAndroid='rgba(0,0,0,0)' 
+                selectionColor="#fff"
+                keyboardType="email-address"
+                onSubmitEditing={()=> this.password.focus()}/>
+                </Item>
+                {this.isFieldInError('email') && this.getErrorsInField('email').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
+                    
+                <Item floatingLabel padder> 
+                <Label>Password</Label>
+                <Input 
+                onChangeText={(password) => this.setState({password})} 
+                underlineColorAndroid='rgba(0,0,0,0)' 
+                secureTextEntry={true}
+                ref={(input) => this.password = input}
+                />
+                </Item>
+                {this.isFieldInError('password') && this.getErrorsInField('password').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
+                    
+                <Text style={styles.apiText}></Text>
+                <Button style={s.buttonStyle}  block onPress={() => this.saveData(navigate)}><Text> Login </Text></Button>
                     <Content padder>
-                    <Text>Dont have an account yet? <Text style={{color:'blue'}} onPress={this.signup}>Register</Text> </Text>
+                    <Text>Dont have an account yet? <Text style={{color:'blue'}} onPress={this.signup}>Sign Up</Text> </Text>
                     </Content>
-                        </Content>
-              <Content padder>
-          
               <SocialIcon  style={{borderRadius:0}}
       title='Login With Facebook'
       button
@@ -66,3 +173,18 @@ export default class Login extends Component {
         }
     }
 
+    const styles = StyleSheet.create({
+
+      errorText:{
+        color:'red',
+        marginTop:5,
+        marginBottom:5,
+      },
+      apiText:{
+        color:'green',
+        marginTop:5,
+        marginBottom:5,
+      },
+    
+    });
+    
