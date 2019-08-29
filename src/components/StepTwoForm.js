@@ -7,7 +7,7 @@ import {  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View} from 'react-native';
-import { Icon, Item,Button, Picker,Left,Right, Content, Container ,Text,Row,Col,Grid, Label } from 'native-base';
+import { Icon, Item,Button, Picker,Left,Right, Content, Container ,Text,Row,Col,Grid, Label,Input } from 'native-base';
  
 import {Actions} from 'react-native-router-flux';
 //import * as ImagePicker from 'expo-image-picker';
@@ -26,8 +26,14 @@ export default class StepTwoForm extends Component {
     super(props);
     this.state = {
       cameraType: 'back',
-      mirrorMode: false
+      mirrorMode: false,
+      idtype:''
     };
+  }
+  onValueChange(value) {
+    this.setState({
+      idtype: value
+    });
   }
   async componentWillMount() {
     const { status } =await Permissions.askAsync(Permissions.CAMERA);
@@ -73,6 +79,16 @@ snap = async (recognize) => {
 
     return (
       <Content padder>
+         <Item floatingLabel padder> 
+                    <Label>Nationality</Label>
+                    <Input 
+                    onChangeText={(nationality) => this.setState({nationality})} 
+                    underlineColorAndroid='rgba(0,0,0,0)' 
+                    ref={(input) => this.nationality = input}
+                    onChange={this.props.handleChange('nationality')}
+                    />
+
+                    </Item>
         <Item picker>
           <Label>ID Type</Label>
               <Picker
@@ -82,12 +98,12 @@ snap = async (recognize) => {
                 placeholder="Select your ID type"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
+                selectedValue={this.state.idtype}
+                onValueChange={this.onValueChange.bind(this)}
               >
-                <Picker.Item label="State ID" value="1" />
+                <Picker.Item label="Addhaar Card" value="1" />
                 <Picker.Item label="Driving Licence" value="2" />
-                <Picker.Item label="Military ID" value="3" />
-                <Picker.Item label="Passport" value="4" />
-                <Picker.Item label="National Card" value="5" />
+                <Picker.Item label="passport" value="3" />
               </Picker>
               </Item>
             
@@ -114,21 +130,6 @@ snap = async (recognize) => {
         ><Text>Take a photo</Text></Button>
         </Row>
         </Grid>
-        <Grid>
-        <Left>
-        <Button iconLeft style={s.buttonStyle} onPress={this.back}>
-            <Icon name='arrow-back' />
-            <Text>Back</Text>
-          </Button>
-          </Left>
-<Right>
-          <Button iconRight style={s.buttonStyle} onPress={this.continue}>
-          <Text>Next</Text>
-           <Icon name='arrow-forward'  />
-            
-          </Button>
-          </Right>
-          </Grid>
          
       </Content>
     );
@@ -378,7 +379,7 @@ async function uploadImageAsync(uri) {
     name: `photo.${fileType}`,
     type: `image/${fileType}`,
   });
-  formData.append('idtype',2);
+  formData.append('idtype',this.state.idtype);
   let options = {
     method: 'POST',
     body: formData,

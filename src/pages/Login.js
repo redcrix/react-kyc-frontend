@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  TouchableOpacity,StyleSheet } from 'react-native';
+import {  TouchableOpacity,StyleSheet,AsyncStorage } from 'react-native';
 import { Container,Content, Title, Text, Button, Left, Right, Body, Icon,Item,Input,Label,Toast } from 'native-base';
 import {Actions} from 'react-native-router-flux';
 import SocialIcons from '../components/SocialIcons';
@@ -77,6 +77,7 @@ this.setState({token:tokenAuth});
           text: responseJson.message,
           buttonText: "Okay",
           type: "danger",
+          position:'center'
         })
       }
         else
@@ -85,9 +86,10 @@ this.setState({token:tokenAuth});
             text: responseJson.message,
             buttonText: "Okay",
             type: "success",
+            position:'center'
           })
         this.storeData(responseJson.data);      
-        navigate('Dashboard');
+        navigate('App');
         }
       })
     .catch((error) => {
@@ -135,7 +137,7 @@ this.setState({token:tokenAuth});
                 onSubmitEditing={()=> this.password.focus()}/>
                 </Item>
                 {this.isFieldInError('email') && this.getErrorsInField('email').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
-                    
+             
                 <Item floatingLabel padder> 
                 <Label>Password</Label>
                 <Input 
@@ -144,9 +146,8 @@ this.setState({token:tokenAuth});
                 secureTextEntry={true}
                 ref={(input) => this.password = input}
                 />
-                </Item>
+                </Item>        
                 {this.isFieldInError('password') && this.getErrorsInField('password').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
-                    
                 <Text style={styles.apiText}></Text>
                 <Button style={s.buttonStyle}  block onPress={() => this.saveData(navigate)}><Text> Login </Text></Button>
                     <Content padder>

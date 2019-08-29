@@ -6,7 +6,7 @@ import StepTwoForm from '../../components/StepTwoForm';
 import StepThreeForm from '../../components/StepThreeForm';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { AsyncStorage,Platform} from 'react-native';
+import { AsyncStorage,Platform,Stylesheet,View} from 'react-native';
 
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
@@ -16,18 +16,25 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import ValidationComponent from '../../validators/index';
 
-import { Container,Content, Title, Text, Button, Left, Right, Body, Icon, DatePicker,Toast } from 'native-base';
+import { Container,Content, Title, Text, Button, Left, Right, Body, Icon, DatePicker,Toast ,Input} from 'native-base';
+import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 
 
 export default class KycForm extends ValidationComponent {
   constructor(props){    
     super(props);
     this.handleChange = this.handleChange.bind(this);
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    var pyyyy=yyyy-18;
+    mindate = pyyyy+ '-' + mm + '-' + dd;
+    maxdate = yyyy+ '-' + mm + '-' + dd;
     this.state={
+      minDate:mindate,
+      maxDate:maxdate,
       userDetails:{},
-      errorMessage: null,
-      location:'',
-      inputData:{},
       step:1, 
       userid:'',
       firstname:'',
@@ -43,15 +50,11 @@ export default class KycForm extends ValidationComponent {
     }
 }
 
+
 componentWillMount() {
   this.retrieveItem('userData').then((userData) => {
-    const {userid,firstname,middlename,lastname} = this.state;
     this.setState({userDetails:userData});
-  
-    //this.setState({userid:userData._id,firstname:userData.firstname,middlename:userData.middlename,lastname:userData.lastname});
-    //this callback is executed when your Promise is resolved
     }).catch((error) => {
-    //this callback is executed when your Promise is rejected
     console.log('Promise is rejected with error: ' + error);
     }); 
   if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -86,43 +89,22 @@ _getLocationAsync = async () => {
   this.setState({ location });
 };
 
-
-
-nextStep=()=>{
-  const {step}=this.state;
-  const {address}=this.state;
-  console.log(address);
-  this.setState({
-      step : this.state.step + 1
-    })
-  }
-
-
-prevStep=()=>{
-  const {step}=this.state;
-this.setState({
-  step : this.state.step - 1
-})
-}
-
 handleChange = (input) => event => {
-
-  var newState = {};
-  newState[input] = event.nativeEvent.text;
-  this.setState(newState);
+  this.setState({ [input] : event.nativeEvent.text });
 }
 
 handleChangeDate = (date) => event => {
-  this.setState({ [input] : event.nativeEvent.text })
+  console.log(date);
+  this.setState({ [date] : event.nativeEvent.text })
 }
 
 saveData =()=>{
- //this.state.input;
- const {userData} = this.state;
- const {userid,firstname,middlename,lastname} = this.state;
+ const {userDetails,dob,residance} = this.state;
 
  let userdata={
-   userid:this.state.userDetails['_id']
+   userid:userDetails['_id'],
+   dob:dob,
+   residance:residance
 }
       //AsyncStorage.setItem('signupDetails', JSON.stringify(signupDetails));
      const json= JSON.stringify(userdata);
@@ -165,32 +147,23 @@ saveData =()=>{
       } else if (this.state.location) {
         locationData = this.state.location.coords;
       }
-
-      const {dob,nationality,location,address,aid,bid,typeofphotoidentification,typeofaddressidentification}=this.state;
-      const values={dob,nationality,address,aid,bid,typeofphotoidentification,typeofaddressidentification};
-      switch (step) {
-        case 1:
+      
+      const {dob,nationality,location,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate}=this.state;
+      const values={dob,nationality,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate};
+          console.log(values.dob);
           return   <Container>
-          <Header/> 
-          <Content>
+            <ProgressSteps  progressBarColor='#154771'  activeStepIconBorderColor="#154771" activeLabelColor="#154771" completedProgressBarColor="#154771" completedStepIconColor="#154771">
+            <ProgressStep label="First Step"  nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}  >
             <StepOneForm  nextStep={this.nextStep} userDetails={this.state.userDetails} handleChangeDate={this.handleChangeDate} handleChange={this.handleChange} locationData={locationData} values={values}/>            
-            </Content>        
-          </Container>
-        case 2:
-          return <Container>
-          <Header/> 
-          <Content>
+            </ProgressStep>
+            <ProgressStep label="Second Step" previousBtnStyle={{backgroundColor:'#154771'}} previousBtnTextStyle={{color:'#fff'}} nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}>
             <StepTwoForm  prevStep={this.prevStep} nextStep={this.nextStep} handleChange={this.handleChange} values={values}/>
-            </Content>                
+            </ProgressStep>
+            <ProgressStep label="Third Step"  onSubmit={this.saveData}  previousBtnStyle={{backgroundColor:'#154771'}} previousBtnTextStyle={{color:'#fff'}} nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}>
+            <StepThreeForm  saveData={this.saveData} prevStep={this.prevStep} nextStep={this.nextStep} handleChange={this.handleChange} values={values}/>
+            </ProgressStep>
+            </ProgressSteps>
           </Container>
-        case 3:
-          return <Container>
-          <Header/> 
-          <Content> 
-          <StepThreeForm  saveData={this.saveData} prevStep={this.prevStep} nextStep={this.nextStep} handleChange={this.handleChange} values={values}/>
-          </Content>
-          </Container>
-      }
+      
     }
 }
-

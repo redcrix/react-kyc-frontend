@@ -4,11 +4,10 @@ import Footer from '../../components/Footer';
 import KycForm from './KycForm';
 import Login from '../Login';
 import { createAppContainer ,createBottomTabNavigator} from 'react-navigation';
-import {  TouchableOpacity,StyleSheet,AsyncStorage } from 'react-native';
+import {  TouchableOpacity,StyleSheet,AsyncStorage,View } from 'react-native';
 var s = require('../../../assets/css/style');
-
-
 import { Container,Content, Title, Text,H1, Button, Left, Right, Body,Row, Icon, DatePicker,Card,CardItem } from 'native-base';
+
 
  export default class Dashboard extends React.Component {
   constructor(props){    
@@ -24,9 +23,8 @@ logout=()=>
 
 removeData = async () => {
   try {
-    console.log('dd');
     await AsyncStorage.removeItem('userData');
-    this.props.navigation.navigate('Login');
+    this.props.navigation.navigate('Auth');
   } catch (error) {
     return error;
   }
@@ -34,8 +32,8 @@ removeData = async () => {
     render() {
       return(   
       <Container>
-        <Header/> 
         <Content padder>
+       
           <Row style={{justifyContent: 'center',alignItems: 'center'}}>
           <H1>Welcome</H1>
           </Row>

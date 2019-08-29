@@ -13,7 +13,7 @@ export default class FooterContainer extends Component {
         return(
         <Footer>
 
-          <FooterTab style={{backgroundColor:"#154771"}}>
+          <FooterTab style={{backgroundColor:"#fff"}}>
 
           <Button active>
                             <Text>Profile</Text>

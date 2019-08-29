@@ -31,6 +31,7 @@ verifyData(){
       <Container>
         <Header/> 
         <Content padder>
+       
         <List>
             <ListItem itemDivider>
               <Text>Kyc Details</Text>
