@@ -20,9 +20,7 @@ export default class StepOneForm extends ValidationComponent {
       selectedCountry: null
     };
   }
-  onNextStep = () => {
-  console.log('df');
-};
+
       continue= e =>{
         e.preventDefault();
         this.props.nextStep();        
@@ -51,7 +49,7 @@ export default class StepOneForm extends ValidationComponent {
       const { query,selectedCountry } = this.state;
       const countries = this.findCountries(query);
       const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
-      const {values,handleChange,handleChangeDate,userDetails} = this.props;
+      const {values,userDetails} = this.props;
             return(
                 <Content padder>
                   <Item stackedLabel padder> 
@@ -60,7 +58,6 @@ export default class StepOneForm extends ValidationComponent {
                       <Input disabled
                     underlineColorAndroid='rgba(0,0,0,0)' 
                     ref={(input) => this.firstname = input}
-                    onChange={handleChange('firstname')}
                     defaultValue={userDetails.firstname}
                     />
                     </Item>
@@ -71,9 +68,7 @@ export default class StepOneForm extends ValidationComponent {
                     <Input disabled
                     underlineColorAndroid='rgba(0,0,0,0)' 
                     ref={(input) => this.middlename = input}
-                    onChange={this.props.handleChange('middlename')}
                     defaultValue={userDetails.middlename}
-          
                     />
                     </Item>
                     <Item stackedLabel padder> 
@@ -81,9 +76,7 @@ export default class StepOneForm extends ValidationComponent {
                     <Input disabled
                     underlineColorAndroid='rgba(0,0,0,0)' 
                     ref={(input) => this.lastname = input}
-                    onChange={this.props.handleChange('lastname')}
-                 defaultValue={userDetails.lastname}
-           
+                    defaultValue={userDetails.lastname}     
                     />
                     </Item>
                     <Item > 
@@ -105,8 +98,7 @@ export default class StepOneForm extends ValidationComponent {
                     marginLeft: 36
                     }
                     }}
-                    onDateChange={(dob) => {this.setState({dob}) && this.props.handleChangeDate(dob)  }}
-                    defaultValue={values.dob}
+                   onDateChange={(dob) => {this.setState({dob}) && this.props.onChangeDate(dob)  }}
                     />
                        </Item>
                        {this.isFieldInError('dob') && this.getErrorsInField('dob').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }

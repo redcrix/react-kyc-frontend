@@ -97,7 +97,7 @@ export default class Signup extends ValidationComponent {
                     ref={(input) => this.firstname = input}
                     />                   
                     </Item>
-                    {this.isFieldInError('firstname') && this.getErrorsInField('firstname').map(errorMessage => <Text style={styles.errorText}>{errorMessage}</Text>) }
+                    {this.isFieldInError('firstname') && this.getErrorsInField('firstname').map(errorMessage => <Text key={errorMessage.toString()} style={styles.errorText}>{errorMessage}</Text>) }
                     <Item floatingLabel > 
                 <Label>Middlename</Label>
                       <Input 
@@ -106,7 +106,7 @@ export default class Signup extends ValidationComponent {
                     ref={(input) => this.middlename = input}
                     />                   
                     </Item>
-                    {this.isFieldInError('middlename') && this.getErrorsInField('middlename').map(errorMessage => <Text style={styles.errorText}>{errorMessage}</Text>) }
+                    {this.isFieldInError('middlename') && this.getErrorsInField('middlename').map(errorMessage => <Text key={errorMessage.toString()} style={styles.errorText}>{errorMessage}</Text>) }
                     <Item floatingLabel > 
                 <Label>Lastname</Label>
                       <Input 
@@ -115,7 +115,7 @@ export default class Signup extends ValidationComponent {
                     ref={(input) => this.lastname = input}
                     />                   
                     </Item>
-                    {this.isFieldInError('lastname') && this.getErrorsInField('lastname').map(errorMessage => <Text style={styles.errorText}>{errorMessage}</Text>) }
+                    {this.isFieldInError('lastname') && this.getErrorsInField('lastname').map(errorMessage => <Text key={errorMessage.toString()} style={styles.errorText}>{errorMessage}</Text>) }
                     <Item floatingLabel padder>
                     <Label>Email Address</Label>
                     <Input 
@@ -125,7 +125,7 @@ export default class Signup extends ValidationComponent {
                     keyboardType="email-address"
                     onSubmitEditing={()=> this.password.focus()}/>
                     </Item>
-                    {this.isFieldInError('email') && this.getErrorsInField('email').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
+                    {this.isFieldInError('email') && this.getErrorsInField('email').map(errorMessage => <Text key={errorMessage.toString()}  style={styles.errorText}>{errorMessage}</Text>) }
                     
                     <Item floatingLabel padder>
                     <Label>Password</Label>
@@ -137,7 +137,7 @@ export default class Signup extends ValidationComponent {
                     ref={(input) => this.password = input}
                     />
                     </Item>
-                    {this.isFieldInError('password') && this.getErrorsInField('password').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
+                    {this.isFieldInError('password') && this.getErrorsInField('password').map(errorMessage => <Text key={errorMessage.toString()} style={styles.errorText}>{errorMessage}</Text>) }
                     <Item floatingLabel padder>
                     <Label>Confirm Password</Label>
                        <Input 
@@ -148,7 +148,7 @@ export default class Signup extends ValidationComponent {
                     ref={(input) => this.cpassword = input}
                     />
                     </Item>  
-                    {this.isFieldInError('cpassword') && this.getErrorsInField('cpassword').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
+                    {this.isFieldInError('cpassword') && this.getErrorsInField('cpassword').map(errorMessage => <Text key={errorMessage.toString()} style={styles.errorText}>{errorMessage}</Text>) }
                     <Button style={s.buttonStyle} block onPress={() => this.saveData(navigate)} ><Text> Sign Up </Text></Button>
                     <Modal
           visible={this.state.modalVisible}

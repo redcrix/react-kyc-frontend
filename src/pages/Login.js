@@ -136,8 +136,7 @@ this.setState({token:tokenAuth});
                 keyboardType="email-address"
                 onSubmitEditing={()=> this.password.focus()}/>
                 </Item>
-                {this.isFieldInError('email') && this.getErrorsInField('email').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
-             
+                {this.isFieldInError('email') && this.getErrorsInField('email').map(errorMessage => <Text key={errorMessage.toString()}  style={styles.errorText}>{errorMessage}</Text>) }
                 <Item floatingLabel padder> 
                 <Label>Password</Label>
                 <Input 
@@ -147,7 +146,7 @@ this.setState({token:tokenAuth});
                 ref={(input) => this.password = input}
                 />
                 </Item>        
-                {this.isFieldInError('password') && this.getErrorsInField('password').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
+                {this.isFieldInError('password') && this.getErrorsInField('password').map(errorMessage => <Text key={errorMessage.toString()} style={styles.errorText}>{errorMessage}</Text>) }
                 <Text style={styles.apiText}></Text>
                 <Button style={s.buttonStyle}  block onPress={() => this.saveData(navigate)}><Text> Login </Text></Button>
                     <Content padder>

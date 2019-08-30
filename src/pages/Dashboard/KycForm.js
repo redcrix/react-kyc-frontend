@@ -23,7 +23,6 @@ import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 export default class KycForm extends ValidationComponent {
   constructor(props){    
     super(props);
-    this.handleChange = this.handleChange.bind(this);
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -45,6 +44,7 @@ export default class KycForm extends ValidationComponent {
       address:'',
       aid:'',
       pid:'',
+      text:'',
       typeofphotoidentification: '',
       typeofaddressidentification: ''
     }
@@ -90,10 +90,10 @@ _getLocationAsync = async () => {
 };
 
 handleChange = (input) => event => {
-  this.setState({ [input] : event.nativeEvent.text });
+  this.setState(() => ({ [input]: event.nativeEvent.text }));
 }
 
-handleChangeDate = (date) => event => {
+onChangeDate = (date) => event => {
   console.log(date);
   this.setState({ [date] : event.nativeEvent.text })
 }
@@ -148,13 +148,13 @@ saveData =()=>{
         locationData = this.state.location.coords;
       }
       
-      const {dob,nationality,location,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate}=this.state;
+      const {dob,nationality,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate}=this.state;
       const values={dob,nationality,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate};
-          console.log(values.dob);
+         
           return   <Container>
             <ProgressSteps  progressBarColor='#154771'  activeStepIconBorderColor="#154771" activeLabelColor="#154771" completedProgressBarColor="#154771" completedStepIconColor="#154771">
             <ProgressStep label="First Step"  nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}  >
-            <StepOneForm  nextStep={this.nextStep} userDetails={this.state.userDetails} handleChangeDate={this.handleChangeDate} handleChange={this.handleChange} locationData={locationData} values={values}/>            
+            <StepOneForm  nextStep={this.nextStep} userDetails={this.state.userDetails}  handleChange={this.handleChange} locationData={locationData} values={values}/>            
             </ProgressStep>
             <ProgressStep label="Second Step" previousBtnStyle={{backgroundColor:'#154771'}} previousBtnTextStyle={{color:'#fff'}} nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}>
             <StepTwoForm  prevStep={this.prevStep} nextStep={this.nextStep} handleChange={this.handleChange} values={values}/>
