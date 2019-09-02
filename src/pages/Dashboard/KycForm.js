@@ -41,6 +41,7 @@ export default class KycForm extends ValidationComponent {
       lastname:'',
       dob:'',
       nationality:'',
+      countryofresidance:'',
       address:'',
       aid:'',
       pid:'',
@@ -89,22 +90,28 @@ _getLocationAsync = async () => {
   this.setState({ location });
 };
 
-handleChange = (input) => event => {
-  this.setState(() => ({ [input]: event.nativeEvent.text }));
+handleChangeAutoComplete = (autocomplete)  => {
+  this.setState(() => ({ countryofresidance : autocomplete }));
 }
 
-onChangeDate = (date) => event => {
-  console.log(date);
-  this.setState({ [date] : event.nativeEvent.text })
+handleChangeDate = (date) =>{
+  this.setState({ dob : date});
+}
+handleChange = (input) =>event =>{
+  this.setState({ [input] : event.nativeElement.text});
+}
+
+onFirstStep= ()=>{
+  const {dob,countryofresidance,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate}=this.state;
+
 }
 
 saveData =()=>{
- const {userDetails,dob,residance} = this.state;
-
+ const {userDetails,dob,countryofresidance} = this.state;
  let userdata={
    userid:userDetails['_id'],
    dob:dob,
-   residance:residance
+   countryofresidance:countryofresidance
 }
       //AsyncStorage.setItem('signupDetails', JSON.stringify(signupDetails));
      const json= JSON.stringify(userdata);
@@ -153,8 +160,8 @@ saveData =()=>{
          
           return   <Container>
             <ProgressSteps  progressBarColor='#154771'  activeStepIconBorderColor="#154771" activeLabelColor="#154771" completedProgressBarColor="#154771" completedStepIconColor="#154771">
-            <ProgressStep label="First Step"  nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}  >
-            <StepOneForm  nextStep={this.nextStep} userDetails={this.state.userDetails}  handleChange={this.handleChange} locationData={locationData} values={values}/>            
+            <ProgressStep label="First Step" onNext={this.onFirstStep}  nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}  >
+            <StepOneForm   userDetails={this.state.userDetails}  handleChangeDate={this.handleChangeDate} handleChangeAutoComplete={this.handleChangeAutoComplete} locationData={locationData} values={values}/>            
             </ProgressStep>
             <ProgressStep label="Second Step" previousBtnStyle={{backgroundColor:'#154771'}} previousBtnTextStyle={{color:'#fff'}} nextBtnStyle={{backgroundColor:'#154771'}} nextBtnTextStyle={{color:'#fff'}}>
             <StepTwoForm  prevStep={this.prevStep} nextStep={this.nextStep} handleChange={this.handleChange} values={values}/>

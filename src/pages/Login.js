@@ -77,7 +77,7 @@ this.setState({token:tokenAuth});
           text: responseJson.message,
           buttonText: "Okay",
           type: "danger",
-          position:'center'
+          position:'bottom'
         })
       }
         else
@@ -86,7 +86,7 @@ this.setState({token:tokenAuth});
             text: responseJson.message,
             buttonText: "Okay",
             type: "success",
-            position:'center'
+            position:'bottom'
           })
         this.storeData(responseJson.data);      
         navigate('App');

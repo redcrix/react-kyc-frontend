@@ -1,8 +1,8 @@
 {
-  "name": "KycFrontend",
+  "name": "ubuntukyc",
   "expo": {
-    "name": "KycFrontend",
-    "slug": "KycFrontend",
+    "name": "ubuntukyc",
+    "slug": "ubuntukyc",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [
@@ -26,10 +26,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.redcrix.a20.KycFrontend"
+      "bundleIdentifier": "io.leruths.ubuntukyc"
     },
     "android": {
-      "package": "com.redcrix.a20.KycFrontend"
+      "package": "io.leruths.ubuntukyc"
     }
   }
 }

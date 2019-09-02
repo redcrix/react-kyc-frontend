@@ -4,23 +4,13 @@ import {  ActivityIndicator,
   Image,
   Share,
   StatusBar,
-  StyleSheet,
-  TouchableOpacity,
-  View} from 'react-native';
-import { Icon, Item,Button, Picker,Left,Right, Content, Container ,Text,Row,Col,Grid, Label,Input } from 'native-base';
- 
-import {Actions} from 'react-native-router-flux';
-//import * as ImagePicker from 'expo-image-picker';
-
+  StyleSheet} from 'react-native';
+import { Icon, Item,Button, Picker, Content,Text,Row,Grid, Label,Input } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import { Camera } from 'expo-camera';
-import * as FaceDetector from 'expo-face-detector';
-import { Dropdown } from 'react-native-material-dropdown';
+
 var s = require('../../assets/css/style');
 
-
- 
 export default class StepTwoForm extends Component {
   constructor(props) {
     super(props);

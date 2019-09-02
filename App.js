@@ -12,6 +12,9 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import {name as appName} from './app.json';
 
+
+  AppRegistry.registerComponent(appName, () => App);
+
 if (Platform.OS === 'web') {
       AppRegistry.runApplication(appName, {
            rootTag: document.getElementById('root'),
