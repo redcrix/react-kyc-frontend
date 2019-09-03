@@ -43,6 +43,9 @@ export default class StepOneForm extends ValidationComponent {
       const countries = this.findCountries(query);
       const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
       const {values,userDetails,handleChangeDate} = this.props;
+
+      console.log(values.dob);
+      console.log(values.minDate);
             return(
                 <Content padder>
                   <Item stackedLabel padder> 
@@ -73,7 +76,7 @@ export default class StepOneForm extends ValidationComponent {
                     <Item > 
                     <Label>Date Of Birth</Label>
                     <DatePicker
-                    //date={values.dob}
+                    date={values.dob}
                     mode="date"
                     format="YYYY-MM-DD"
                     maximumDate={new Date(values.minDate)}
@@ -91,14 +94,15 @@ export default class StepOneForm extends ValidationComponent {
                     }
                     }}
                     onDateChange={(date) => {this.props.handleChangeDate(date) }}
+                    defaultValue={new Date(values.dob)}
                     />
                        </Item>
                        {this.isFieldInError('dob') && this.getErrorsInField('dob').map(errorMessage => <Text  style={styles.errorText}>{errorMessage}</Text>) }
                       <Autocomplete 
+                     defaultValue={values.countryofresidance} 
           autoCapitalize="none"
           autoCorrect={false}
           data={countries.length === 1 && comp(query, countries[0].name)? [] : countries}
-          defaultValue={query}
           onChangeText={text => this.setState({ query: text }) }
           hideResults={selectedCountry && selectedCountry.name === query}
           placeholder="Search here.."

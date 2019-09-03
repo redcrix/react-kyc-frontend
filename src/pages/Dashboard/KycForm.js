@@ -102,8 +102,9 @@ handleChange = (input) =>event =>{
 }
 
 onFirstStep= ()=>{
-  const {dob,countryofresidance,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate}=this.state;
-
+  const {dob,countryofresidance}=this.state;
+  console.log(dob);
+  console.log(countryofresidance);
 }
 
 saveData =()=>{
@@ -155,8 +156,8 @@ saveData =()=>{
         locationData = this.state.location.coords;
       }
       
-      const {dob,nationality,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate}=this.state;
-      const values={dob,nationality,address,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate};
+      const {dob,nationality,countryofresidance,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate}=this.state;
+      const values={dob,nationality,countryofresidance,aid,bid,typeofphotoidentification,typeofaddressidentification,minDate,maxDate};
          
           return   <Container>
             <ProgressSteps  progressBarColor='#154771'  activeStepIconBorderColor="#154771" activeLabelColor="#154771" completedProgressBarColor="#154771" completedStepIconColor="#154771">
